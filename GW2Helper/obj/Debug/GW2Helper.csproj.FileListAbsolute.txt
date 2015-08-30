@@ -1,0 +1,11 @@
+E:\Files\C-sharp-Programme\GW2Helper\GW2Helper\obj\Debug\GW2Helper.Form1.resources
+E:\Files\C-sharp-Programme\GW2Helper\GW2Helper\obj\Debug\GW2Helper.info.resources
+E:\Files\C-sharp-Programme\GW2Helper\GW2Helper\obj\Debug\GW2Helper.options.resources
+E:\Files\C-sharp-Programme\GW2Helper\GW2Helper\obj\Debug\GW2Helper.Properties.Resources.resources
+E:\Files\C-sharp-Programme\GW2Helper\GW2Helper\obj\Debug\GW2Helper.csproj.GenerateResource.Cache
+E:\Files\C-sharp-Programme\GW2Helper\GW2Helper\bin\Debug\GW2Launcher.exe.config
+E:\Files\C-sharp-Programme\GW2Helper\GW2Helper\bin\Debug\GW2Launcher.exe
+E:\Files\C-sharp-Programme\GW2Helper\GW2Helper\bin\Debug\GW2Launcher.pdb
+E:\Files\C-sharp-Programme\GW2Helper\GW2Helper\obj\Debug\GW2Helper.help.resources
+E:\Files\C-sharp-Programme\GW2Helper\GW2Helper\obj\Debug\GW2Launcher.exe
+E:\Files\C-sharp-Programme\GW2Helper\GW2Helper\obj\Debug\GW2Launcher.pdb

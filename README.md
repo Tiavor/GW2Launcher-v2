@@ -9,7 +9,8 @@ Setup
 1. Browse for GW2.exe
 2. enter command lines if needed e.g. -maploadinfo
 3. ForEach ( Account in UserAccounts)
- {
+{
+
     3.1. Start GuildWars2
     3.2. activate "remember accountname" and "remember password"
     3.3. login to GW2 (replace the login data with thedata of the current account)

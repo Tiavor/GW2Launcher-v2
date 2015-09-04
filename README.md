@@ -30,7 +30,7 @@ After an update or when you change the graphical or audio options ingame, you ha
 
 Check Autosave for doing this automated (saves after gw2 is closed)
 
-
+-
 
 * When "shaders?" is checkt, it will rename a file from "D3D9.dll2" to "D3D9.dll" in the bin folder.
 
@@ -38,7 +38,7 @@ Additionally when there is a file named ReShadeUnlocker.exe present in the GW2 f
 
 When unchecked, it will rename it the other way round.
 
-
+-
 
 Usage:
 

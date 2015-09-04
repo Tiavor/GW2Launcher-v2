@@ -92,6 +92,13 @@ namespace GW2Helper
             if (i == 1)
                 textBoxShaderPath.Text = path;
         }
+        internal void setAutosave(string state)
+        {
+            if (state == "True")
+                checkBoxAutosave.Checked = true;
+            else
+                checkBoxAutosave.Checked = false;
+        }
         internal void setCmd(string cmd)
         {
             textBoxCMD.Text = cmd;
@@ -158,23 +165,26 @@ namespace GW2Helper
 
             }
         }
-
+        internal void saveLocalDat(int id)
+        {
+            thatParentForm.configPut("acc." + id.ToString() + ".file", thatParentForm.pid + "#" + id.ToString() + "Local.dat");
+        }
         private void buttonSet0_Click(object sender, EventArgs e)
         {
-            //start gw if gw is not running and index is ok 
+            //copy only if gw is not running
             Process p = Process.GetProcessesByName("gw2").FirstOrDefault();
             if (p == null)
             {
                 int id = getID_BN(sender);
                 if (listNamebox[id].Text == "")
                 {
-                    thatParentForm.configPut("acc." + id.ToString() + ".file", thatParentForm.pid + "#" + id.ToString() + "Local.dat");
+                    saveLocalDat(id);
                     thatParentForm.configPut("acc." + id.ToString() + ".name", id.ToString());
                 }
                 else
                 {
                     //if (System.Text.RegularExpressions.Regex.IsMatch(listNamebox[id].Text,@"^[\+-.\p{L}\p{N}]+$"))
-                    thatParentForm.configPut("acc." + id.ToString() + ".file", thatParentForm.pid + "#" + id.ToString() + "Local.dat");
+                    saveLocalDat(id);
                     thatParentForm.configPut("acc." + id.ToString() + ".name", listNamebox[id].Text);
                 }
                 string target=Path.Combine(path, thatParentForm.pid + "#" + id.ToString() + "Local.dat");
@@ -257,6 +267,11 @@ namespace GW2Helper
         private void textBoxShaderPath_TextChanged(object sender, EventArgs e)
         {
             thatParentForm.configPut("pathUnlocker", textBoxShaderPath.Text);
+        }
+
+        private void checkBox11_CheckedChanged(object sender, EventArgs e)
+        {
+            thatParentForm.configPut("autosave",((CheckBox)sender).Checked.ToString());
         }
     }
 }

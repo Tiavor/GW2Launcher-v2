@@ -55,7 +55,20 @@ namespace GW2Helper
         //BackgroundWorker bw_copy = new BackgroundWorker();
         private string[] args = Environment.GetCommandLineArgs();
         private int lastStarted=-1;
-        
+        public int index=0;
+        Process gw2pro = null;
+        //BackgroundWorker bw = new BackgroundWorker();
+
+        //constants and imports for moving the form without the top bar
+        private const int WM_NCLBUTTONDOWN = 0xA1;
+        private const int HT_CAPTION = 0x2;
+        [DllImportAttribute("user32.dll")]
+        private static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        private static extern bool ReleaseCapture();
+        [DllImport("User32.dll")]
+        static extern int SetForegroundWindow(IntPtr point);
+
         public Form1()
         {
             InitializeComponent();
@@ -76,9 +89,10 @@ namespace GW2Helper
             //toolTip1.SetToolTip(buttonOptionen, "Beware: if not setup correctly, gw2 will remain white on startup.\n But it may also take a little longer as usual. (10s ony my system till char select)");
             // adding a reference of this form to the options form for accessing functions etc
             fO.thatParentForm = this;
+            fO.labelStatus.Text = "";
             // register function to an asyc thread
-            //bw_copy.DoWork += new DoWorkEventHandler(runCopyGw2localdat);
-            //bw_copy.WorkerSupportsCancellation = true;
+            //bw.WorkerSupportsCancellation = true;
+            //bw.DoWork += new DoWorkEventHandler(runAutosave);
             //loading all variables into labels and textboxes
             if (args.Length > 0)
                 for (int i = 0; i < args.Length; i++)
@@ -89,22 +103,12 @@ namespace GW2Helper
             configLoad();
         }
 
-        //variables and imports for moving the form without the top bar
-        private const int WM_NCLBUTTONDOWN = 0xA1;
-        private const int HT_CAPTION = 0x2;
-        [DllImportAttribute("user32.dll")]
-        private static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        [DllImportAttribute("user32.dll")]
-        private static extern bool ReleaseCapture();
-        [DllImport("User32.dll")]
-        static extern int SetForegroundWindow(IntPtr point);
-
         // setup the process and start
-        private void startGW(int index)
+        private void startGW(int i)
         {
             //start gw if gw is not running and index is ok 
             Process p = Process.GetProcessesByName("gw2").FirstOrDefault();
-            
+            index = i;
             if (p == null)
             {
                 string file = Path.Combine(fO.path, ConfigGet("acc." + index.ToString() + ".file"));
@@ -153,14 +157,29 @@ namespace GW2Helper
                     if (File.Exists(dllFile))
                         File.Move(dllFile, dllFileCopy);
                 }
+
                 //start gw
-                Process gw2pro = new Process();
+                fO.labelStatus.Text = "gw2 is running";
+                gw2pro = new Process();
                 gw2pro.StartInfo.FileName = ConfigGet("path");
                 gw2pro.StartInfo.Arguments = ConfigGet("cmd");
+                if (ConfigGet("autosave") == "True")
+                {
+                    gw2pro.EnableRaisingEvents = true;
+                    gw2pro.Exited += new EventHandler(onGW2Exit);
+                }
                 gw2pro.Start();
             }
         }
-        
+
+
+        private void onGW2Exit(object sender, System.EventArgs e)
+        {
+            fO.saveLocalDat(index);
+            fO.labelStatus.Text = "saved #"+(index+1).ToString();
+        }
+
+
         // get ID from accessibleName, all accessible names used in this program are plain numbers
         // used to access all buttons or textboxes with only one fuction assigned
         // the ID is used as index in the lists of all labels/boxes
@@ -258,6 +277,7 @@ namespace GW2Helper
                     }
                     
             }
+            fO.setAutosave(ConfigGet("autosave"));
             fO.setPath(ConfigGet("path"),0);
             fO.setCmd(ConfigGet("cmd"));
             fO.setPath(ConfigGet("pathUnlocker"),1);

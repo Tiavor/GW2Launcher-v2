@@ -122,12 +122,13 @@
             // 
             this.button_startacc0.AccessibleName = "0";
             this.button_startacc0.AutoSize = true;
+            this.button_startacc0.BackColor = System.Drawing.Color.Transparent;
             this.button_startacc0.Location = new System.Drawing.Point(145, 65);
             this.button_startacc0.Name = "button_startacc0";
             this.button_startacc0.Size = new System.Drawing.Size(61, 23);
             this.button_startacc0.TabIndex = 5;
             this.button_startacc0.Text = "Start";
-            this.button_startacc0.UseVisualStyleBackColor = true;
+            this.button_startacc0.UseVisualStyleBackColor = false;
             this.button_startacc0.Click += new System.EventHandler(this.button_startacc1_Click);
             // 
             // button1

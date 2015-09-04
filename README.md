@@ -11,20 +11,14 @@ Setup
 3. ForEach ( Account in UserAccounts)
 
 {
-
     3.1. Start GuildWars2
     3.2. activate "remember accountname" and "remember password"
     3.3. login to GW2 (replace the login data with thedata of the current account)
-
-   (3.4.) setup the options in game (they might be wrong)
-
+    3.4. [setup the options in game (they might be wrong)]
     3.5. close GW2
     3.6. Press the "Set" button
-    
-   (3.7.) enter a name for that account, e.g. "Main"
-   
-   (3.8.) check the shader button if you want to use shaders*
-   
+    3.7. [enter a name for that account, e.g. "Main"]
+    3.8. [check the shader button if you want to use shaders*]
 }
 
 

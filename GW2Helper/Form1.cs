@@ -43,7 +43,7 @@ namespace GW2Helper
 {
     public partial class Form1 : Form
     {
-        public string Version = "2.0";
+        public string Version = "2.0.1";
         private options fO = new options();
         private info fI = new info();
         internal help hlp = new help();
@@ -400,7 +400,7 @@ namespace GW2Helper
 
         private void button2_Click(object sender, EventArgs e)
         {
-            this.MinimizeBox=true;
+
         }
 
         private void buttonInfo_Click(object sender, EventArgs e)

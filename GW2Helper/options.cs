@@ -96,8 +96,10 @@ namespace GW2Helper
         {
             if (state == "True")
                 checkBoxAutosave.Checked = true;
-            else
+            else {
                 checkBoxAutosave.Checked = false;
+                labelStatus.Text = "";
+            }
         }
         internal void setCmd(string cmd)
         {

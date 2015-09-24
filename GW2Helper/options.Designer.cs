@@ -96,6 +96,8 @@
             this.buttonBrowseShader = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.textBoxShaderPath = new System.Windows.Forms.TextBox();
+            this.checkBoxSnap = new System.Windows.Forms.CheckBox();
+            this.checkBoxSavePos = new System.Windows.Forms.CheckBox();
             this.checkBoxAutosave = new System.Windows.Forms.CheckBox();
             this.labelStatus = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -750,24 +752,47 @@
             this.textBoxShaderPath.TabIndex = 121;
             this.textBoxShaderPath.TextChanged += new System.EventHandler(this.textBoxShaderPath_TextChanged);
             // 
+            // checkBoxSnap
+            // 
+            this.checkBoxSnap.AutoSize = true;
+            this.checkBoxSnap.Location = new System.Drawing.Point(294, 296);
+            this.checkBoxSnap.Name = "checkBoxSnap";
+            this.checkBoxSnap.Size = new System.Drawing.Size(102, 17);
+            this.checkBoxSnap.TabIndex = 124;
+            this.checkBoxSnap.Text = "snap to desktop";
+            this.checkBoxSnap.UseVisualStyleBackColor = true;
+            this.checkBoxSnap.CheckedChanged += new System.EventHandler(this.checkBoxSnap_CheckedChanged);
+            // 
+            // checkBoxSavePos
+            // 
+            this.checkBoxSavePos.AutoSize = true;
+            this.checkBoxSavePos.Location = new System.Drawing.Point(294, 320);
+            this.checkBoxSavePos.Name = "checkBoxSavePos";
+            this.checkBoxSavePos.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.checkBoxSavePos.Size = new System.Drawing.Size(108, 17);
+            this.checkBoxSavePos.TabIndex = 125;
+            this.checkBoxSavePos.Text = "save window pos";
+            this.checkBoxSavePos.UseVisualStyleBackColor = true;
+            this.checkBoxSavePos.CheckedChanged += new System.EventHandler(this.checkBoxSavePos_CheckedChanged);
+            // 
             // checkBoxAutosave
             // 
             this.checkBoxAutosave.AutoSize = true;
-            this.checkBoxAutosave.Location = new System.Drawing.Point(96, 94);
+            this.checkBoxAutosave.Location = new System.Drawing.Point(96, 93);
             this.checkBoxAutosave.Name = "checkBoxAutosave";
             this.checkBoxAutosave.Size = new System.Drawing.Size(117, 17);
-            this.checkBoxAutosave.TabIndex = 124;
+            this.checkBoxAutosave.TabIndex = 126;
             this.checkBoxAutosave.Text = "auto save changes";
             this.checkBoxAutosave.UseVisualStyleBackColor = true;
-            this.checkBoxAutosave.CheckedChanged += new System.EventHandler(this.checkBox11_CheckedChanged);
+            this.checkBoxAutosave.CheckedChanged += new System.EventHandler(this.checkBoxAutosave_CheckedChanged);
             // 
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(3, 95);
+            this.labelStatus.Location = new System.Drawing.Point(19, 93);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(37, 13);
-            this.labelStatus.TabIndex = 125;
+            this.labelStatus.TabIndex = 127;
             this.labelStatus.Text = "Status";
             // 
             // options
@@ -775,9 +800,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(457, 440);
+            this.ClientSize = new System.Drawing.Size(457, 432);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.checkBoxAutosave);
+            this.Controls.Add(this.checkBoxSavePos);
+            this.Controls.Add(this.checkBoxSnap);
             this.Controls.Add(this.buttonBrowseShader);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.textBoxShaderPath);
@@ -918,7 +945,9 @@
         private System.Windows.Forms.Button buttonBrowseShader;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBoxShaderPath;
-        private System.Windows.Forms.CheckBox checkBoxAutosave;
+        internal System.Windows.Forms.CheckBox checkBoxSavePos;
+        internal System.Windows.Forms.CheckBox checkBoxSnap;
+        internal System.Windows.Forms.CheckBox checkBoxAutosave;
         internal System.Windows.Forms.Label labelStatus;
     }
 }

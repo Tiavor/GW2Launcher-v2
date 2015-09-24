@@ -14,6 +14,7 @@ using System.Configuration;
 using System.Collections.Specialized;
 using System.Threading;
 using System.IO;
+using System.Text.RegularExpressions;
 
 /*
  * The MIT License (MIT)
@@ -43,21 +44,20 @@ namespace GW2Helper
 {
     public partial class Form1 : Form
     {
-        public string Version = "2.0.1";
+        public string Version = "2.1";
         private options fO = new options();
         private info fI = new info();
         internal help hlp = new help();
-        int oldX=0,oldY=0;
         Label[] lastloginlabels, accountlabels;
         Button[] startButtons, setButtons;
         RadioButton[] lastloginsign;
         internal string pid = "";
         //BackgroundWorker bw_copy = new BackgroundWorker();
         private string[] args = Environment.GetCommandLineArgs();
-        private int lastStarted=-1;
-        public int index=0;
+        private int lastStarted = -1;
+        public int index = 0;
         Process gw2pro = null;
-        //BackgroundWorker bw = new BackgroundWorker();
+        private const int snapDist = 30;
 
         //constants and imports for moving the form without the top bar
         private const int WM_NCLBUTTONDOWN = 0xA1;
@@ -66,6 +66,8 @@ namespace GW2Helper
         private static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
         [DllImportAttribute("user32.dll")]
         private static extern bool ReleaseCapture();
+        [DllImportAttribute("user32.dll")]
+        private static extern bool SetCapture(IntPtr hWnd);
         [DllImport("User32.dll")]
         static extern int SetForegroundWindow(IntPtr point);
 
@@ -91,16 +93,16 @@ namespace GW2Helper
             fO.thatParentForm = this;
             fO.labelStatus.Text = "";
             // register function to an asyc thread
-            //bw.WorkerSupportsCancellation = true;
-            //bw.DoWork += new DoWorkEventHandler(runAutosave);
+            //bw_copy.DoWork += new DoWorkEventHandler(runCopyGw2localdat);
+            //bw_copy.WorkerSupportsCancellation = true;
             //loading all variables into labels and textboxes
             if (args.Length > 0)
                 for (int i = 0; i < args.Length; i++)
-                    if (args[i] == "-id"&& i<args.Length-1)
+                    if (args[i] == "-id" && i < args.Length - 1)
                     {
                         pid = args[i + 1];
                     }
-            configLoad();
+            //configLoad(); //called via FormLoadEvent (Form1_Load)
         }
 
         // setup the process and start
@@ -108,24 +110,30 @@ namespace GW2Helper
         {
             //start gw if gw is not running and index is ok 
             Process p = Process.GetProcessesByName("gw2").FirstOrDefault();
-            index = i;
+
             if (p == null)
             {
+                string path = ConfigGet("path");
+                if (!File.Exists(path))
+                {
+                    MessageBox.Show("invalid gw2path");
+                    return;
+                }
                 string file = Path.Combine(fO.path, ConfigGet("acc." + index.ToString() + ".file"));
                 if (!File.Exists(file)) {
                     file = Path.Combine(fO.path, pid + "#" + index.ToString() + "Local.dat");
                     if (File.Exists(file))
                     {
-                        configPut("acc." + index.ToString() + ".file", pid+"#" + index.ToString() + "Local.dat");
+                        configPut("acc." + index.ToString() + ".file", pid + "#" + index.ToString() + "Local.dat");
                         configPut("acc." + index.ToString() + ".name", index.ToString());
                     }
                 }
                 if (File.Exists(file))
                 {
                     ConfigSetLastlogin(index);
-                    File.Copy(file, Path.Combine(fO.path, "Local.dat"),true);
+                    File.Copy(file, Path.Combine(fO.path, "Local.dat"), true);
                     lastloginsign[index].ForeColor = Color.Lime;
-                    if (lastStarted>=0)
+                    if (lastStarted >= 0)
                         lastloginsign[lastStarted].ForeColor = Color.RoyalBlue;
                     lastloginsign[index].Checked = true;
                     lastStarted = index;
@@ -136,19 +144,20 @@ namespace GW2Helper
                         file + "\n");
                     return;
                 }
-
-                string gw2path = ConfigGet("path").Substring(0, ConfigGet("path").LastIndexOf("\\"));
-                string dllFileCopy=Path.Combine(gw2path,"bin\\d3d9.dll2");
-                string dllFile=Path.Combine(gw2path,"bin\\d3d9.dll");
+                index = i;
+                string gw2path = path.Substring(0, path.LastIndexOf("\\"));
+                string dllFileCopy = Path.Combine(gw2path, "bin\\d3d9.dll2");
+                string dllFile = Path.Combine(gw2path, "bin\\d3d9.dll");
 
                 //check for shader files and usage
                 if (ConfigGet("acc." + index.ToString() + ".useshader") == "True") {
                     Process shUnl = new Process();
                     shUnl.StartInfo.FileName = ConfigGet("pathUnlocker");
-                    if (File.Exists(shUnl.StartInfo.FileName) && (File.Exists(dllFile)||File.Exists(dllFileCopy))) {
+                    if (File.Exists(shUnl.StartInfo.FileName) && (File.Exists(dllFile) || File.Exists(dllFileCopy))) {
                         if (File.Exists(dllFileCopy) && !File.Exists(dllFile))
-                            File.Move(dllFileCopy,dllFile);
-                        shUnl.Start();
+                            File.Move(dllFileCopy, dllFile);
+                        try { shUnl.Start(); }
+                        catch (Exception e) { MessageBox.Show(e.Message); }
                         Thread.Sleep(100);
                     }
                 }
@@ -168,24 +177,23 @@ namespace GW2Helper
                     gw2pro.EnableRaisingEvents = true;
                     gw2pro.Exited += new EventHandler(onGW2Exit);
                 }
-                gw2pro.Start();
+                try { gw2pro.Start(); }
+                catch (Exception e) { MessageBox.Show(e.Message); }
             }
-        }
 
+        }
 
         private void onGW2Exit(object sender, System.EventArgs e)
         {
             fO.saveLocalDat(index);
-            fO.labelStatus.Text = "saved #"+(index+1).ToString();
         }
-
 
         // get ID from accessibleName, all accessible names used in this program are plain numbers
         // used to access all buttons or textboxes with only one fuction assigned
         // the ID is used as index in the lists of all labels/boxes
-        private int getID(object sender){
+        private int getID(object sender) {
             Button button = sender as Button;
-            int id=Convert.ToInt32(button.AccessibleName);
+            int id = Convert.ToInt32(button.AccessibleName);
             if (id >= 0 && id <= 100)
                 return id;
             else
@@ -193,68 +201,55 @@ namespace GW2Helper
         }
         private void setLastlogin(int ID, DateTime date)
         {
-            DateTime now=DateTime.Now.ToUniversalTime();
+            DateTime now = DateTime.Now.ToUniversalTime();
             DateTime dateUTC = date.ToUniversalTime();
             now = now.AddHours(0 - now.Hour);
             now = now.AddMinutes(0 - now.Minute);
             now = now.AddSeconds(0 - now.Second);
             if (ID > 0)
                 ;
-            double days=now.Subtract(dateUTC).TotalDays;
-            double daysi = Math.Floor(days)+1;
+            double days = now.Subtract(dateUTC).TotalDays;
+            double daysi = Math.Floor(days) + 1;
             if (daysi < 1)
             {
                 lastloginlabels[ID].Text = "today";
-                if (lastStarted==ID)
+                if (lastStarted == ID)
                     lastloginsign[ID].ForeColor = Color.Lime;
                 else
                     lastloginsign[ID].ForeColor = Color.RoyalBlue;
             }
             else
                 if (daysi < 2)
-                {
-                    lastloginsign[ID].ForeColor = Color.Goldenrod;
-                    lastloginlabels[ID].Text = daysi.ToString() + " day ago";
-                }
-                else {
-                    lastloginlabels[ID].Text = daysi.ToString() + " days ago";
-                    lastloginsign[ID].ForeColor = Color.Red;
-                }
+            {
+                lastloginsign[ID].ForeColor = Color.Goldenrod;
+                lastloginlabels[ID].Text = daysi.ToString() + " day ago";
+            }
+            else {
+                lastloginlabels[ID].Text = daysi.ToString() + " days ago";
+                lastloginsign[ID].ForeColor = Color.Red;
+            }
             lastloginsign[ID].Checked = true;
+            lastloginsign[ID].Visible = true;
         }
         private void setLastlogin(int ID, string date)
         {
-            if (date == null || date.Length<8)
+            if (date == null || date.Length < 8)
             {
                 lastloginlabels[ID].Text = "";
                 return;
             }
             setLastlogin(ID, Convert.ToDateTime(date));
         }
-
-        //get the position of another application, code by DataDink
-        /*
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct RECT
+        
+        private Rectangle getScreen()
         {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
+            return Screen.FromControl(this).Bounds;
         }
-        [DllImport("user32.dll")]
-        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
-        public static Point GetHwndPos(IntPtr hwnd)
-        {
-            RECT lpRect = new RECT();
-            GetWindowRect(hwnd, out lpRect);
-            return new Point(lpRect.Left, lpRect.Top);
-        }*/
         //////////////////////
         // App.config methods
         internal void configLoad()
         {
-            for (int i = 0; i < 10;i++ )
+            for (int i = 0; i < 10; i++)
             {
                 if (ConfigGet("acc." + i.ToString() + ".name") != "")
                 {
@@ -265,26 +260,40 @@ namespace GW2Helper
                     accountlabels[i].Text = ConfigGet("acc." + i.ToString() + ".name");
                 }
                 else
-                    if (File.Exists(Path.Combine(fO.path, pid+"#" + i.ToString() + "Local.dat")))
-                    {
-                        lastloginlabels[i].Text = "unknown";
-                        fO.setEntry(i, "acc#" + i.ToString(), "false");
-                    }
-                    else
-                    {
-                        lastloginlabels[i].Text = "";
-                        lastloginsign[i].Checked = false;
-                    }
+                    if (File.Exists(Path.Combine(fO.path, pid + "#" + i.ToString() + "Local.dat")))
+                {
+                    lastloginlabels[i].Text = "unknown";
+                    fO.setEntry(i, "acc#" + i.ToString(), "false");
+                }
+                else
+                {
+                    lastloginlabels[i].Text = "";
+                    lastloginsign[i].Checked = false;
+                }
+
+            }
+            fO.setPath(ConfigGet("path"), 0);
+            fO.setCmd(ConfigGet("cmd"));
+            fO.setPath(ConfigGet("pathUnlocker"), 1);
+            fO.setCheckbox(10, ConfigGet("snap"));
+            fO.setCheckbox(11, ConfigGet("savePos"));
+            fO.setCheckbox(12, ConfigGet("autosave"));
+            if (fO.checkBoxSavePos.Checked) {
+                string x = ConfigGet("WindowPosX");
+                string y = ConfigGet("WindowPosY");
+                if (x != null && y != null && x.Length>0 && y.Length>0 && Regex.IsMatch(x, @"^\d+$") && Regex.IsMatch(y, @"^\d+$"))
+                {
+                    int locX = int.Parse(x);
+                    int locY = int.Parse(y);
+                    if (locX>=0 && locY >= 0 && locX < 2000000 && locY < 2000000)
+                        Location = new Point(locX, locY);
+                }
                     
             }
-            fO.setAutosave(ConfigGet("autosave"));
-            fO.setPath(ConfigGet("path"),0);
-            fO.setCmd(ConfigGet("cmd"));
-            fO.setPath(ConfigGet("pathUnlocker"),1);
         }
         internal void configPut(string key, string value)
         {
-            if (pid!="")
+            if (pid != "")
                 key = pid + "-" + key;
             Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
             config.AppSettings.Settings.Remove(key);
@@ -294,11 +303,11 @@ namespace GW2Helper
         }
         internal string ConfigGet(string key)
         {
-            string ret="";
+            string ret = "";
             try {
                 if (pid != "")
-                    key = pid+"-"+key;
-                ret=ConfigurationManager.AppSettings.Get(key);
+                    key = pid + "-" + key;
+                ret = ConfigurationManager.AppSettings.Get(key);
             }
             catch (Exception e) {
                 return "";
@@ -310,8 +319,8 @@ namespace GW2Helper
         }
         private void ConfigSetLastlogin(int ID)
         {
-            string date=System.DateTime.Now.ToString();
-            configPut("acc."+ID.ToString()+".lastlogin", date);
+            string date = System.DateTime.Now.ToString();
+            configPut("acc." + ID.ToString() + ".lastlogin", date);
             setLastlogin(ID, System.DateTime.Now);
         }
         //////////////////////
@@ -354,53 +363,65 @@ namespace GW2Helper
             {
                 ReleaseCapture();
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-                /*if (fO.Visible)
-                {
-                    fO.Focus();
-                    this.Focus();
-                    fO.Left = this.Left + this.Width;
-                    fO.Top = this.Top;
-                }*/
             }
         }
+
+
         private void Form1_Move(object sender, EventArgs e)
         {
+            if (fO.checkBoxSnap.Checked) {
+                int finalPosX = Location.X;
+                int finalPosY = Location.Y;
+                bool changed = false;
+                Rectangle screen = getScreen();
+                if (Location.X < screen.Left + snapDist)
+                {
+                    changed = true;
+                    finalPosX = screen.Left;
+                } else
+                if (Location.X + Size.Width > screen.Right - snapDist)
+                {
+                    changed = true;
+                    finalPosX = screen.Right - Size.Width;
+                }
+
+                if (Location.Y < screen.Top + snapDist)
+                {
+                    changed = true;
+                    finalPosY = screen.Top;
+                } else
+                if (Location.Y + Size.Height > screen.Bottom - snapDist)
+                {
+                    changed = true;
+                    finalPosY = screen.Bottom - Size.Height;
+                }
+
+                if (changed && !screen.IsEmpty)
+                {
+                    this.Location = new Point(finalPosX, finalPosY);
+                    ReleaseCapture();
+                    //this.Location = new Point(finalPosX, finalPosY);
+                    SetCapture(Handle);
+                }
+            }
+            //sets the location for the options window, moves them together
             Point p = this.PointToScreen(new Point(this.Width, this.ClientRectangle.Y));
             this.fO.Location = p;
         }
 
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (Opacity<0.8)
-            if (e.X < 5 || e.Y < 5 || e.X > Size.Width - 5 || e.Y > Size.Height - 5)
-            {
-                Opacity = 0.3;
-            }
-            else
-            {
-                Opacity = 0.7;
-            }
-            if (fO.Visible)
-                Opacity = 1;
-            oldX = e.X;
-            oldY = e.Y;
-        }
-
-        private void Form1_Deactivate(object sender, EventArgs e)
-        {
-            if(!fO.Visible)
-            Opacity = 0.3;
-        }
-
-        private void Form1_Activated(object sender, EventArgs e)
-        {
-            Opacity = 1;
-            configLoad();
-        }
 
         private void button2_Click(object sender, EventArgs e)
         {
+            this.WindowState = FormWindowState.Minimized;
+        }
 
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (fO.checkBoxSavePos.Checked)
+            {
+                configPut("WindowPosX", Location.X.ToString());
+                configPut("WindowPosY", Location.Y.ToString());
+            }
         }
 
         private void buttonInfo_Click(object sender, EventArgs e)

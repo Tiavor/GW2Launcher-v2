@@ -49,7 +49,7 @@ namespace GW2Helper
         internal Form1 thatParentForm { get; set; }
         private Label[] listStatus;
         private TextBox[] listNamebox;
-        private CheckBox[] listShader;
+        private CheckBox[] listChecboxes;
         internal String path = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "Guild Wars 2");
@@ -62,8 +62,8 @@ namespace GW2Helper
                                      labelStatus5, labelStatus6, labelStatus7, labelStatus8, labelStatus9};
             listNamebox = new TextBox[] { textBoxname0, textBoxname1, textBoxname2, textBoxname3, textBoxname4,
                                           textBoxname5, textBoxname6, textBoxname7, textBoxname8, textBoxname9};
-            listShader = new CheckBox[] {checkBox1, checkBox2, checkBox3, checkBox4, checkBox5,
-                                         checkBox6, checkBox7, checkBox8, checkBox9, checkBox10};
+            listChecboxes = new CheckBox[] {checkBox1, checkBox2, checkBox3, checkBox4, checkBox5,
+                                         checkBox6, checkBox7, checkBox8, checkBox9, checkBox10, checkBoxSnap, checkBoxSavePos, checkBoxAutosave};
             toolTip1.SetToolTip(textBoxCMD,"add additional command line arguments here like -maploadinfo, seperated by a space");
             toolTip1.SetToolTip(textBoxname0, "Could be anything e.g.the account name'name.1234' or simply an enumeration");
         }
@@ -77,13 +77,17 @@ namespace GW2Helper
                 }
                 else
                     listNamebox[id].Text = name;
-                if (shader == "True")
-                    listShader[id].Checked = true;
-                else
-                   listShader[id].Checked = false;
+                setCheckbox(id, shader);
             }
             else
                 listStatus[id].Visible = false;
+        }
+        internal void setCheckbox(int id, string value)
+        {
+            if (value.ToLower() == "true")
+                listChecboxes[id].Checked = true;
+            else
+                listChecboxes[id].Checked = false;
         }
         internal void setPath(string path, int i)
         {
@@ -91,15 +95,6 @@ namespace GW2Helper
                 textBoxPath.Text = path;
             if (i == 1)
                 textBoxShaderPath.Text = path;
-        }
-        internal void setAutosave(string state)
-        {
-            if (state == "True")
-                checkBoxAutosave.Checked = true;
-            else {
-                checkBoxAutosave.Checked = false;
-                labelStatus.Text = "";
-            }
         }
         internal void setCmd(string cmd)
         {
@@ -167,10 +162,13 @@ namespace GW2Helper
 
             }
         }
+
         internal void saveLocalDat(int id)
         {
+            labelStatus.Text = "saved #" + (id + 1).ToString();
             thatParentForm.configPut("acc." + id.ToString() + ".file", thatParentForm.pid + "#" + id.ToString() + "Local.dat");
         }
+
         private void buttonSet0_Click(object sender, EventArgs e)
         {
             //copy only if gw is not running
@@ -189,14 +187,14 @@ namespace GW2Helper
                     saveLocalDat(id);
                     thatParentForm.configPut("acc." + id.ToString() + ".name", listNamebox[id].Text);
                 }
-                string target=Path.Combine(path, thatParentForm.pid + "#" + id.ToString() + "Local.dat");
+                string target = Path.Combine(path, thatParentForm.pid + "#" + id.ToString() + "Local.dat");
                 if (!File.Exists(Path.Combine(path, "Local.dat")))
                 {
                     MessageBox.Show("No local.dat found, Start GW2 first!");
                     return;
                 }
 
-                File.Copy(Path.Combine(path, "Local.dat"), target,true);
+                File.Copy(Path.Combine(path, "Local.dat"), target, true);
                 listStatus[id].Visible = true;
             }
             else
@@ -271,9 +269,19 @@ namespace GW2Helper
             thatParentForm.configPut("pathUnlocker", textBoxShaderPath.Text);
         }
 
-        private void checkBox11_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxSnap_CheckedChanged(object sender, EventArgs e)
         {
-            thatParentForm.configPut("autosave",((CheckBox)sender).Checked.ToString());
+            thatParentForm.configPut("snap", checkBoxSnap.Checked.ToString());
+        }
+
+        private void checkBoxSavePos_CheckedChanged(object sender, EventArgs e)
+        {
+            thatParentForm.configPut("savePos", checkBoxSavePos.Checked.ToString());
+        }
+
+        private void checkBoxAutosave_CheckedChanged(object sender, EventArgs e)
+        {
+            thatParentForm.configPut("autosave", checkBoxAutosave.Checked.ToString());
         }
     }
 }

@@ -137,6 +137,7 @@ ForEach ( Account in UserAccounts)
 
 Info:
 When you change the graphical or audio options ingame, you have to press Set again if you want to save the changes.
+Or use the "auto save changes" option.
 
 * When "shaders?" is checkt, it will rename a file from "D3D9.dll2" to "D3D9.dll" in the bin folder.
 Additionally when there is a file named ReShadeUnlocker.exe present in the GW2 folder, it will start it.

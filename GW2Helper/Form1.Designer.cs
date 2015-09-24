@@ -122,13 +122,12 @@
             // 
             this.button_startacc0.AccessibleName = "0";
             this.button_startacc0.AutoSize = true;
-            this.button_startacc0.BackColor = System.Drawing.Color.Transparent;
             this.button_startacc0.Location = new System.Drawing.Point(145, 65);
             this.button_startacc0.Name = "button_startacc0";
             this.button_startacc0.Size = new System.Drawing.Size(61, 23);
             this.button_startacc0.TabIndex = 5;
             this.button_startacc0.Text = "Start";
-            this.button_startacc0.UseVisualStyleBackColor = false;
+            this.button_startacc0.UseVisualStyleBackColor = true;
             this.button_startacc0.Click += new System.EventHandler(this.button_startacc1_Click);
             // 
             // button1
@@ -617,6 +616,7 @@
             this.radioButton1.Size = new System.Drawing.Size(13, 12);
             this.radioButton1.TabIndex = 55;
             this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.Visible = false;
             // 
             // radioButton2
             // 
@@ -631,6 +631,7 @@
             this.radioButton2.Size = new System.Drawing.Size(13, 12);
             this.radioButton2.TabIndex = 56;
             this.radioButton2.UseVisualStyleBackColor = false;
+            this.radioButton2.Visible = false;
             // 
             // radioButton3
             // 
@@ -644,6 +645,7 @@
             this.radioButton3.Size = new System.Drawing.Size(13, 12);
             this.radioButton3.TabIndex = 57;
             this.radioButton3.UseVisualStyleBackColor = true;
+            this.radioButton3.Visible = false;
             // 
             // radioButton4
             // 
@@ -657,6 +659,7 @@
             this.radioButton4.Size = new System.Drawing.Size(13, 12);
             this.radioButton4.TabIndex = 60;
             this.radioButton4.UseVisualStyleBackColor = true;
+            this.radioButton4.Visible = false;
             // 
             // radioButton5
             // 
@@ -670,6 +673,7 @@
             this.radioButton5.Size = new System.Drawing.Size(13, 12);
             this.radioButton5.TabIndex = 59;
             this.radioButton5.UseVisualStyleBackColor = true;
+            this.radioButton5.Visible = false;
             // 
             // radioButton6
             // 
@@ -683,6 +687,7 @@
             this.radioButton6.Size = new System.Drawing.Size(13, 12);
             this.radioButton6.TabIndex = 58;
             this.radioButton6.UseVisualStyleBackColor = true;
+            this.radioButton6.Visible = false;
             // 
             // radioButton7
             // 
@@ -696,6 +701,7 @@
             this.radioButton7.Size = new System.Drawing.Size(13, 12);
             this.radioButton7.TabIndex = 63;
             this.radioButton7.UseVisualStyleBackColor = true;
+            this.radioButton7.Visible = false;
             // 
             // radioButton8
             // 
@@ -709,6 +715,7 @@
             this.radioButton8.Size = new System.Drawing.Size(13, 12);
             this.radioButton8.TabIndex = 62;
             this.radioButton8.UseVisualStyleBackColor = true;
+            this.radioButton8.Visible = false;
             // 
             // radioButton9
             // 
@@ -722,6 +729,7 @@
             this.radioButton9.Size = new System.Drawing.Size(13, 12);
             this.radioButton9.TabIndex = 61;
             this.radioButton9.UseVisualStyleBackColor = true;
+            this.radioButton9.Visible = false;
             // 
             // radioButton10
             // 
@@ -735,6 +743,7 @@
             this.radioButton10.Size = new System.Drawing.Size(13, 12);
             this.radioButton10.TabIndex = 64;
             this.radioButton10.UseVisualStyleBackColor = true;
+            this.radioButton10.Visible = false;
             // 
             // Form1
             // 
@@ -805,11 +814,9 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Form1";
-            this.Activated += new System.EventHandler(this.Form1_Activated);
-            this.Deactivate += new System.EventHandler(this.Form1_Deactivate);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
             this.Move += new System.EventHandler(this.Form1_Move);
             this.ResumeLayout(false);
             this.PerformLayout();

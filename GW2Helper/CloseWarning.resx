@@ -117,43 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="richTextBox1.Text" xml:space="preserve">
-    <value>Setup
-
-1. Browse for GW2.exe
-2. enter command lines if needed e.g. -maploadinfo
-3.
-ForEach ( Account in UserAccounts)
-{
-    3.1. Start GuildWars2 Launcher
-    3.2. activate "remember accountname" and "remember password"
-    3.3. login to GW2 (replace the login data with thedata of the current account)
-   (3.4.) setup the options in game (they might be wrong)
-    3.5. close GW2
-    3.6. Press the "Set" button
-}
-
-Name for the Account is optional
-[Use Shaders]  Activate reshade for that account.
-                         When this option is checkt, it will rename a file from "D3D9.dll2" to "D3D9.dll" inside the bin folder.
-                         Additionally it will launch the exe file that is selected as "shader program"
-[P2Play acc?]  When you close gw2launcher this will warn you if you still haven't logged in to this account today.
-                         It will also warn you if you close gw2launcher while gw2 is running. Ingame options will not be saved.
-
-Info:
-When you change the graphical or audio options ingame, you have to press Set again if you want to save the changes.
-Or use the "auto save changes" option.
-
-Usage:
-The button right to the Start button sets the last login state to the current time without starting GW2
-Indication states of the RadialButton left to the last login state:
-     -&gt; last used account today
-     -&gt; equals "today"
-     -&gt; last started yesturday, daily login available today
-     -&gt; missed a day or more of login rewards
-     -&gt; not yet logged in to this account
-     -&gt; no account file available
-
-</value>
-  </data>
 </root>

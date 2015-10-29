@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 /*
  * The MIT License (MIT)
@@ -46,10 +40,11 @@ namespace GW2Helper
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
         [DllImportAttribute("user32.dll")]
         private static extern bool ReleaseCapture();
-        internal Form1 thatParentForm { get; set; }
+        internal MainWindow thatParentForm { get; set; }
         private Label[] listStatus;
         private TextBox[] listNamebox;
         private CheckBox[] listChecboxes;
+        internal CheckBox[] listChecboxes2;
         internal String path = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "Guild Wars 2");
@@ -62,12 +57,14 @@ namespace GW2Helper
                                      labelStatus5, labelStatus6, labelStatus7, labelStatus8, labelStatus9};
             listNamebox = new TextBox[] { textBoxname0, textBoxname1, textBoxname2, textBoxname3, textBoxname4,
                                           textBoxname5, textBoxname6, textBoxname7, textBoxname8, textBoxname9};
-            listChecboxes = new CheckBox[] {checkBox1, checkBox2, checkBox3, checkBox4, checkBox5,
-                                         checkBox6, checkBox7, checkBox8, checkBox9, checkBox10, checkBoxSnap, checkBoxSavePos, checkBoxAutosave};
+            listChecboxes = new CheckBox[] {checkBox0, checkBox1, checkBox2, checkBox3, checkBox4,
+                                          checkBox5, checkBox6, checkBox7, checkBox8, checkBox9, checkBoxSnap, checkBoxSavePos, checkBoxAutosave};
+            listChecboxes2 = new CheckBox[] {checkBox10, checkBox11, checkBox12, checkBox13, checkBox14,
+                                         checkBox15, checkBox16, checkBox17, checkBox18, checkBox19 };
             toolTip1.SetToolTip(textBoxCMD,"add additional command line arguments here like -maploadinfo, seperated by a space");
             toolTip1.SetToolTip(textBoxname0, "Could be anything e.g.the account name'name.1234' or simply an enumeration");
         }
-        internal void setEntry(int id, string name, string shader)
+        internal void setEntry(int id, string name, string shader, string warn)
         {
             if (File.Exists(Path.Combine(path, "#" + id.ToString() + "Local.dat"))){
                 listStatus[id].Visible = true;
@@ -78,6 +75,7 @@ namespace GW2Helper
                 else
                     listNamebox[id].Text = name;
                 setCheckbox(id, shader);
+                setCheckbox2(id, warn);
             }
             else
                 listStatus[id].Visible = false;
@@ -88,6 +86,13 @@ namespace GW2Helper
                 listChecboxes[id].Checked = true;
             else
                 listChecboxes[id].Checked = false;
+        }
+        internal void setCheckbox2(int id, string value)
+        {
+            if (value.ToLower() == "true")
+                listChecboxes2[id].Checked = true;
+            else
+                listChecboxes2[id].Checked = false;
         }
         internal void setPath(string path, int i)
         {
@@ -282,6 +287,12 @@ namespace GW2Helper
         private void checkBoxAutosave_CheckedChanged(object sender, EventArgs e)
         {
             thatParentForm.configPut("autosave", checkBoxAutosave.Checked.ToString());
+        }
+
+        private void checkBox10_CheckedChanged(object sender, EventArgs e)
+        {
+            int i = getID_CB(sender);
+            thatParentForm.configPut("acc." + i.ToString() + ".p2p", ((CheckBox)sender).Checked.ToString());
         }
     }
 }

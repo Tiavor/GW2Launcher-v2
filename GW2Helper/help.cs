@@ -10,16 +10,16 @@ using System.Windows.Forms;
 
 namespace GW2Helper
 {
-    public partial class help : Form
+    public partial class gw2LHelp : Form
     {
-        public help()
+        public gw2LHelp()
         {
             InitializeComponent();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.Close();
+            this.Hide();
         }
     }
 }

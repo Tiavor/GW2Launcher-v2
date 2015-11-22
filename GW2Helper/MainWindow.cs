@@ -40,7 +40,7 @@ namespace GW2Helper
         public string Version = "2.2";
         private options fO = new options();
         private info fI = new info();
-        internal help hlp = new help();
+        internal gw2LHelp hlp = new gw2LHelp();
         private CloseWarning warn = new CloseWarning();
         Label[] lastloginlabels, accountlabels;
         Button[] startButtons, setButtons;
@@ -105,7 +105,6 @@ namespace GW2Helper
         {
             //start gw if gw is not running and index is ok 
             Process p = Process.GetProcessesByName("gw2").FirstOrDefault();
-
             if (p == null)
             {
                 string path = ConfigGet("path");
@@ -114,24 +113,24 @@ namespace GW2Helper
                     MessageBox.Show("invalid gw2path");
                     return;
                 }
-                string file = Path.Combine(fO.path, ConfigGet("acc." + index.ToString() + ".file"));
+                string file = Path.Combine(fO.path, ConfigGet("acc." + i.ToString() + ".file"));
                 if (!File.Exists(file)) {
-                    file = Path.Combine(fO.path, pid + "#" + index.ToString() + "Local.dat");
+                    file = Path.Combine(fO.path, pid + "#" + i.ToString() + "Local.dat");
                     if (File.Exists(file))
                     {
-                        configPut("acc." + index.ToString() + ".file", pid + "#" + index.ToString() + "Local.dat");
-                        configPut("acc." + index.ToString() + ".name", index.ToString());
+                        configPut("acc." + i.ToString() + ".file", pid + "#" + i.ToString() + "Local.dat");
+                        configPut("acc." + i.ToString() + ".name", i.ToString());
                     }
                 }
                 if (File.Exists(file))
                 {
-                    ConfigSetLastlogin(index);
+                    ConfigSetLastlogin(i);
                     File.Copy(file, Path.Combine(fO.path, "Local.dat"), true);
-                    lastloginsign[index].ForeColor = Color.Lime;
+                    lastloginsign[i].ForeColor = Color.Lime;
                     if (lastStarted >= 0)
                         lastloginsign[lastStarted].ForeColor = Color.RoyalBlue;
-                    lastloginsign[index].Checked = true;
-                    lastStarted = index;
+                    lastloginsign[i].Checked = true;
+                    lastStarted = i;
                 }
                 else
                 {
@@ -139,13 +138,12 @@ namespace GW2Helper
                         file + "\n");
                     return;
                 }
-                index = i;
                 string gw2path = path.Substring(0, path.LastIndexOf("\\"));
                 string dllFileCopy = Path.Combine(gw2path, "bin\\d3d9.dll2");
                 string dllFile = Path.Combine(gw2path, "bin\\d3d9.dll");
 
                 //check for shader files and usage
-                if (ConfigGet("acc." + index.ToString() + ".useshader") == "True") {
+                if (ConfigGet("acc." + i.ToString() + ".useshader") == "True") {
                     Process shUnl = new Process();
                     shUnl.StartInfo.FileName = ConfigGet("pathUnlocker");
                     if (File.Exists(shUnl.StartInfo.FileName) && (File.Exists(dllFile) || File.Exists(dllFileCopy))) {
@@ -171,6 +169,7 @@ namespace GW2Helper
                 {
                     gw2pro.EnableRaisingEvents = true;
                     gw2pro.Exited += new EventHandler(onGW2Exit);
+                    index = i;
                 }
                 try { gw2pro.Start(); }
                 catch (Exception e) { MessageBox.Show(e.Message); }
@@ -382,7 +381,11 @@ namespace GW2Helper
             if (fI.Visible)
                 fI.Hide();
             else
+            {
+                if (fI.IsDisposed)
+                    fI = new info();
                 fI.Show();
+            }
         }
 
         /////////////////

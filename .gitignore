@@ -49,3 +49,7 @@ GW2Helper/bin/debug/
 *.pdb
 *.vshost.exe
 *.exe.manifest
+GW2Launcher.EXE.config
+GW2Launcher.pdb
+GW2Launcher.vshost.exe
+GW2Launcher.vshost.exe.config

@@ -254,6 +254,8 @@ namespace GW2Helper
 
         private void buttonHelp_Click(object sender, EventArgs e)
         {
+            if (thatParentForm.hlp.IsDisposed)
+                thatParentForm.hlp = new gw2LHelp();
             thatParentForm.hlp.Show();
         }
 

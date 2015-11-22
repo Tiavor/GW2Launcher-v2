@@ -79,12 +79,12 @@
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
-            this.radioButton5 = new System.Windows.Forms.RadioButton();
             this.radioButton6 = new System.Windows.Forms.RadioButton();
-            this.radioButton7 = new System.Windows.Forms.RadioButton();
-            this.radioButton8 = new System.Windows.Forms.RadioButton();
+            this.radioButton5 = new System.Windows.Forms.RadioButton();
+            this.radioButton4 = new System.Windows.Forms.RadioButton();
             this.radioButton9 = new System.Windows.Forms.RadioButton();
+            this.radioButton8 = new System.Windows.Forms.RadioButton();
+            this.radioButton7 = new System.Windows.Forms.RadioButton();
             this.radioButton10 = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
@@ -647,19 +647,19 @@
             this.radioButton3.UseVisualStyleBackColor = true;
             this.radioButton3.Visible = false;
             // 
-            // radioButton4
+            // radioButton6
             // 
-            this.radioButton4.AccessibleName = "";
-            this.radioButton4.AutoCheck = false;
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.radioButton4.ForeColor = System.Drawing.Color.Lime;
-            this.radioButton4.Location = new System.Drawing.Point(59, 215);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(13, 12);
-            this.radioButton4.TabIndex = 60;
-            this.radioButton4.UseVisualStyleBackColor = true;
-            this.radioButton4.Visible = false;
+            this.radioButton6.AccessibleName = "";
+            this.radioButton6.AutoCheck = false;
+            this.radioButton6.AutoSize = true;
+            this.radioButton6.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.radioButton6.ForeColor = System.Drawing.Color.Lime;
+            this.radioButton6.Location = new System.Drawing.Point(59, 215);
+            this.radioButton6.Name = "radioButton6";
+            this.radioButton6.Size = new System.Drawing.Size(13, 12);
+            this.radioButton6.TabIndex = 60;
+            this.radioButton6.UseVisualStyleBackColor = true;
+            this.radioButton6.Visible = false;
             // 
             // radioButton5
             // 
@@ -675,33 +675,33 @@
             this.radioButton5.UseVisualStyleBackColor = true;
             this.radioButton5.Visible = false;
             // 
-            // radioButton6
+            // radioButton4
             // 
-            this.radioButton6.AccessibleName = "";
-            this.radioButton6.AutoCheck = false;
-            this.radioButton6.AutoSize = true;
-            this.radioButton6.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.radioButton6.ForeColor = System.Drawing.Color.Lime;
-            this.radioButton6.Location = new System.Drawing.Point(59, 157);
-            this.radioButton6.Name = "radioButton6";
-            this.radioButton6.Size = new System.Drawing.Size(13, 12);
-            this.radioButton6.TabIndex = 58;
-            this.radioButton6.UseVisualStyleBackColor = true;
-            this.radioButton6.Visible = false;
+            this.radioButton4.AccessibleName = "";
+            this.radioButton4.AutoCheck = false;
+            this.radioButton4.AutoSize = true;
+            this.radioButton4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.radioButton4.ForeColor = System.Drawing.Color.Lime;
+            this.radioButton4.Location = new System.Drawing.Point(59, 157);
+            this.radioButton4.Name = "radioButton4";
+            this.radioButton4.Size = new System.Drawing.Size(13, 12);
+            this.radioButton4.TabIndex = 58;
+            this.radioButton4.UseVisualStyleBackColor = true;
+            this.radioButton4.Visible = false;
             // 
-            // radioButton7
+            // radioButton9
             // 
-            this.radioButton7.AccessibleName = "";
-            this.radioButton7.AutoCheck = false;
-            this.radioButton7.AutoSize = true;
-            this.radioButton7.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.radioButton7.ForeColor = System.Drawing.Color.Lime;
-            this.radioButton7.Location = new System.Drawing.Point(59, 302);
-            this.radioButton7.Name = "radioButton7";
-            this.radioButton7.Size = new System.Drawing.Size(13, 12);
-            this.radioButton7.TabIndex = 63;
-            this.radioButton7.UseVisualStyleBackColor = true;
-            this.radioButton7.Visible = false;
+            this.radioButton9.AccessibleName = "";
+            this.radioButton9.AutoCheck = false;
+            this.radioButton9.AutoSize = true;
+            this.radioButton9.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.radioButton9.ForeColor = System.Drawing.Color.Lime;
+            this.radioButton9.Location = new System.Drawing.Point(59, 302);
+            this.radioButton9.Name = "radioButton9";
+            this.radioButton9.Size = new System.Drawing.Size(13, 12);
+            this.radioButton9.TabIndex = 63;
+            this.radioButton9.UseVisualStyleBackColor = true;
+            this.radioButton9.Visible = false;
             // 
             // radioButton8
             // 
@@ -717,19 +717,19 @@
             this.radioButton8.UseVisualStyleBackColor = true;
             this.radioButton8.Visible = false;
             // 
-            // radioButton9
+            // radioButton7
             // 
-            this.radioButton9.AccessibleName = "";
-            this.radioButton9.AutoCheck = false;
-            this.radioButton9.AutoSize = true;
-            this.radioButton9.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.radioButton9.ForeColor = System.Drawing.Color.Lime;
-            this.radioButton9.Location = new System.Drawing.Point(59, 244);
-            this.radioButton9.Name = "radioButton9";
-            this.radioButton9.Size = new System.Drawing.Size(13, 12);
-            this.radioButton9.TabIndex = 61;
-            this.radioButton9.UseVisualStyleBackColor = true;
-            this.radioButton9.Visible = false;
+            this.radioButton7.AccessibleName = "";
+            this.radioButton7.AutoCheck = false;
+            this.radioButton7.AutoSize = true;
+            this.radioButton7.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.radioButton7.ForeColor = System.Drawing.Color.Lime;
+            this.radioButton7.Location = new System.Drawing.Point(59, 244);
+            this.radioButton7.Name = "radioButton7";
+            this.radioButton7.Size = new System.Drawing.Size(13, 12);
+            this.radioButton7.TabIndex = 61;
+            this.radioButton7.UseVisualStyleBackColor = true;
+            this.radioButton7.Visible = false;
             // 
             // radioButton10
             // 
@@ -745,7 +745,7 @@
             this.radioButton10.UseVisualStyleBackColor = true;
             this.radioButton10.Visible = false;
             // 
-            // Form1
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -754,12 +754,12 @@
             this.ClientSize = new System.Drawing.Size(229, 359);
             this.ControlBox = false;
             this.Controls.Add(this.radioButton10);
-            this.Controls.Add(this.radioButton7);
-            this.Controls.Add(this.radioButton8);
             this.Controls.Add(this.radioButton9);
-            this.Controls.Add(this.radioButton4);
-            this.Controls.Add(this.radioButton5);
+            this.Controls.Add(this.radioButton8);
+            this.Controls.Add(this.radioButton7);
             this.Controls.Add(this.radioButton6);
+            this.Controls.Add(this.radioButton5);
+            this.Controls.Add(this.radioButton4);
             this.Controls.Add(this.radioButton3);
             this.Controls.Add(this.radioButton2);
             this.Controls.Add(this.radioButton1);
@@ -812,7 +812,7 @@
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "MainWindow";
             this.Text = "GW2Launcher";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -875,12 +875,12 @@
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton4;
-        private System.Windows.Forms.RadioButton radioButton5;
         private System.Windows.Forms.RadioButton radioButton6;
-        private System.Windows.Forms.RadioButton radioButton7;
-        private System.Windows.Forms.RadioButton radioButton8;
+        private System.Windows.Forms.RadioButton radioButton5;
+        private System.Windows.Forms.RadioButton radioButton4;
         private System.Windows.Forms.RadioButton radioButton9;
+        private System.Windows.Forms.RadioButton radioButton8;
+        private System.Windows.Forms.RadioButton radioButton7;
         private System.Windows.Forms.RadioButton radioButton10;
     }
 }

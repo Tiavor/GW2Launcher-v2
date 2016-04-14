@@ -37,7 +37,8 @@ namespace GW2Helper
 {
     public partial class MainWindow : Form
     {
-        public string Version = "2.2";
+        public string Version = "2.2.1";
+
         private options fO = new options();
         private info fI = new info();
         internal gw2LHelp hlp = new gw2LHelp();
@@ -104,15 +105,16 @@ namespace GW2Helper
         private void startGW(int i)
         {
             //start gw if gw is not running and index is ok 
-            Process p = Process.GetProcessesByName("gw2").FirstOrDefault();
-            if (p == null)
+            using (Process p = Process.GetProcessesByName("gw2").FirstOrDefault())
+            if (p != null)
+                return;
+            string path = ConfigGet("path");
+            if (!File.Exists(path))
             {
-                string path = ConfigGet("path");
-                if (!File.Exists(path))
-                {
-                    MessageBox.Show("invalid gw2path");
-                    return;
-                }
+                MessageBox.Show("invalid gw2path");
+                return;
+            }
+            if (lastStarted != i) {
                 string file = Path.Combine(fO.path, ConfigGet("acc." + i.ToString() + ".file"));
                 if (!File.Exists(file)) {
                     file = Path.Combine(fO.path, pid + "#" + i.ToString() + "Local.dat");
@@ -127,7 +129,7 @@ namespace GW2Helper
                     ConfigSetLastlogin(i);
                     File.Copy(file, Path.Combine(fO.path, "Local.dat"), true);
                     lastloginsign[i].ForeColor = Color.Lime;
-                    if (lastStarted >= 0)
+                    if (lastStarted >= 0) //&& lastStarted != i
                         lastloginsign[lastStarted].ForeColor = Color.RoyalBlue;
                     lastloginsign[i].Checked = true;
                     lastStarted = i;
@@ -138,48 +140,56 @@ namespace GW2Helper
                         file + "\n");
                     return;
                 }
-                string gw2path = path.Substring(0, path.LastIndexOf("\\"));
-                string dllFileCopy = Path.Combine(gw2path, "bin\\d3d9.dll2");
-                string dllFile = Path.Combine(gw2path, "bin\\d3d9.dll");
-
-                //check for shader files and usage
-                if (ConfigGet("acc." + i.ToString() + ".useshader") == "True") {
-                    Process shUnl = new Process();
-                    shUnl.StartInfo.FileName = ConfigGet("pathUnlocker");
-                    if (File.Exists(shUnl.StartInfo.FileName) && (File.Exists(dllFile) || File.Exists(dllFileCopy))) {
-                        if (File.Exists(dllFileCopy) && !File.Exists(dllFile))
-                            File.Move(dllFileCopy, dllFile);
-                        try { shUnl.Start(); }
-                        catch (Exception e) { MessageBox.Show(e.Message); }
-                        Thread.Sleep(100);
-                    }
-                }
-                else
-                {
-                    if (File.Exists(dllFile))
-                        File.Move(dllFile, dllFileCopy);
-                }
-
-                //start gw
-                fO.labelStatus.Text = "gw2 is running";
-                gw2pro = new Process();
-                gw2pro.StartInfo.FileName = ConfigGet("path");
-                gw2pro.StartInfo.Arguments = ConfigGet("cmd");
-                if (ConfigGet("autosave") == "True")
-                {
-                    gw2pro.EnableRaisingEvents = true;
-                    gw2pro.Exited += new EventHandler(onGW2Exit);
-                    index = i;
-                }
-                try { gw2pro.Start(); }
-                catch (Exception e) { MessageBox.Show(e.Message); }
             }
+            else
+                ConfigSetLastlogin(i);
+            string gw2path = path.Substring(0, path.LastIndexOf("\\"));
+            string dllFileCopy = Path.Combine(gw2path, "bin\\d3d9.dll2");
+            string dllFile = Path.Combine(gw2path, "bin\\d3d9.dll");
+
+            //check for shader files and usage
+            if (ConfigGet("acc." + i.ToString() + ".useshader") == "True") {
+                Process shUnl = new Process();
+                shUnl.StartInfo.FileName = ConfigGet("pathUnlocker");
+                if (File.Exists(shUnl.StartInfo.FileName) && (File.Exists(dllFile) || File.Exists(dllFileCopy))) {
+                    if (File.Exists(dllFileCopy) && !File.Exists(dllFile))
+                        File.Move(dllFileCopy, dllFile);
+                    try { shUnl.Start(); }
+                    catch (Exception e) { MessageBox.Show(e.Message); }
+                    Thread.Sleep(100);
+                }
+            }
+            else
+            {
+                if (File.Exists(dllFile))
+                    File.Move(dllFile, dllFileCopy);
+            }
+
+            //start gw
+            for (int k = 0; k < startButtons.Length; k++)
+                startButtons[k].Enabled = false;
+            fO.labelStatus.Text = "gw2 is running";
+            gw2pro = new Process();
+            gw2pro.StartInfo.FileName = ConfigGet("path");
+            gw2pro.StartInfo.Arguments = ConfigGet("cmd");
+            if (ConfigGet("autosave") == "True")
+            {
+                gw2pro.EnableRaisingEvents = true;
+                gw2pro.Exited += new EventHandler(onGW2Exit);
+                index = i;
+            }
+            try { gw2pro.Start(); }
+            catch (Exception e) { MessageBox.Show(e.Message); }
+            
 
         }
 
         private void onGW2Exit(object sender, System.EventArgs e)
         {
+            Thread.Sleep(2000);
             fO.saveLocalDat(index);
+            for (int i=0; i<startButtons.Length;i++)
+                startButtons[i].Enabled = true;
         }
 
         // get ID from accessibleName, all accessible names used in this program are plain numbers
@@ -368,6 +378,8 @@ namespace GW2Helper
         {
             int i = getID(sender);
             ConfigSetLastlogin(i);
+            for (int k = 0; k < startButtons.Length; k++)
+                startButtons[k].Enabled = true;
         }
         
         private void button2_Click(object sender, EventArgs e)

@@ -96,7 +96,6 @@
             this.buttonBrowseShader = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.textBoxShaderPath = new System.Windows.Forms.TextBox();
-            this.checkBoxSnap = new System.Windows.Forms.CheckBox();
             this.checkBoxSavePos = new System.Windows.Forms.CheckBox();
             this.checkBoxAutosave = new System.Windows.Forms.CheckBox();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -113,6 +112,7 @@
             this.checkBox11 = new System.Windows.Forms.CheckBox();
             this.checkBox10 = new System.Windows.Forms.CheckBox();
             this.label13 = new System.Windows.Forms.Label();
+            this.arc = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // labelName0
@@ -765,17 +765,6 @@
             this.textBoxShaderPath.TabIndex = 121;
             this.textBoxShaderPath.TextChanged += new System.EventHandler(this.textBoxShaderPath_TextChanged);
             // 
-            // checkBoxSnap
-            // 
-            this.checkBoxSnap.AutoSize = true;
-            this.checkBoxSnap.Location = new System.Drawing.Point(345, 302);
-            this.checkBoxSnap.Name = "checkBoxSnap";
-            this.checkBoxSnap.Size = new System.Drawing.Size(102, 17);
-            this.checkBoxSnap.TabIndex = 124;
-            this.checkBoxSnap.Text = "snap to desktop";
-            this.checkBoxSnap.UseVisualStyleBackColor = true;
-            this.checkBoxSnap.CheckedChanged += new System.EventHandler(this.checkBoxSnap_CheckedChanged);
-            // 
             // checkBoxSavePos
             // 
             this.checkBoxSavePos.AutoSize = true;
@@ -947,14 +936,24 @@
             this.label13.TabIndex = 140;
             this.label13.Text = "P2Play acc?";
             // 
+            // arc
+            // 
+            this.arc.Location = new System.Drawing.Point(356, 297);
+            this.arc.Name = "arc";
+            this.arc.Size = new System.Drawing.Size(75, 23);
+            this.arc.TabIndex = 141;
+            this.arc.Text = "check arc";
+            this.arc.UseVisualStyleBackColor = true;
+            this.arc.Click += new System.EventHandler(this.arc_Click);
+            // 
             // options
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(500, 438);
+            this.Controls.Add(this.arc);
             this.Controls.Add(this.checkBoxSavePos);
-            this.Controls.Add(this.checkBoxSnap);
             this.Controls.Add(this.buttonHelp);
             this.Controls.Add(this.textBoxPID);
             this.Controls.Add(this.label5);
@@ -1111,7 +1110,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBoxShaderPath;
         internal System.Windows.Forms.CheckBox checkBoxSavePos;
-        internal System.Windows.Forms.CheckBox checkBoxSnap;
         internal System.Windows.Forms.CheckBox checkBoxAutosave;
         internal System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Label label9;
@@ -1127,5 +1125,6 @@
         private System.Windows.Forms.CheckBox checkBox11;
         private System.Windows.Forms.CheckBox checkBox10;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button arc;
     }
 }

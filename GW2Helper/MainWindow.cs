@@ -37,10 +37,16 @@ namespace GW2Helper
 {
     public partial class MainWindow : Form
     {
-        public string Version = "2.2.1";
+        public const string Version = "2.3.2";
+        private const int timeoutOnClose = 5000;//max time in ms; time till save after closing gw2
+        private const int snapDist = 20;
+        private const int timeskip = 500; //timeout between save tries
+        private const int initialTimeskip = 1000;
+
 
         private options fO = new options();
         private info fI = new info();
+        private CheckArc fA = new CheckArc();
         internal gw2LHelp hlp = new gw2LHelp();
         private CloseWarning warn = new CloseWarning();
         Label[] lastloginlabels, accountlabels;
@@ -51,8 +57,10 @@ namespace GW2Helper
         private string[] args = Environment.GetCommandLineArgs();
         private int lastStarted = -1;
         public int index = 0;
+        private bool running = false;
+        private DateTime timestamp;
+        private string hash;
         Process gw2pro = null;
-        private const int snapDist = 30;
 
         //constants and imports for moving the form without the top bar
         private const int WM_NCLBUTTONDOWN = 0xA1;
@@ -87,6 +95,7 @@ namespace GW2Helper
             // adding a reference of this form to the options form for accessing functions etc
             fO.thatParentForm = this;
             fO.labelStatus.Text = "";
+            fA.thatParentForm = this;
             warn.thatParentForm = this;
             // register function to an asyc thread
             //bw_copy.DoWork += new DoWorkEventHandler(runCopyGw2localdat);
@@ -108,7 +117,7 @@ namespace GW2Helper
             using (Process p = Process.GetProcessesByName("gw2").FirstOrDefault())
             if (p != null)
                 return;
-            string path = ConfigGet("path");
+            string path = getPath();
             if (!File.Exists(path))
             {
                 MessageBox.Show("invalid gw2path");
@@ -166,9 +175,6 @@ namespace GW2Helper
             }
 
             //start gw
-            for (int k = 0; k < startButtons.Length; k++)
-                startButtons[k].Enabled = false;
-            fO.labelStatus.Text = "gw2 is running";
             gw2pro = new Process();
             gw2pro.StartInfo.FileName = ConfigGet("path");
             gw2pro.StartInfo.Arguments = ConfigGet("cmd");
@@ -177,19 +183,38 @@ namespace GW2Helper
                 gw2pro.EnableRaisingEvents = true;
                 gw2pro.Exited += new EventHandler(onGW2Exit);
                 index = i;
+                for (int k = 0; k < startButtons.Length; k++)
+                    startButtons[k].Enabled = false;
+                fO.labelStatus.Text = "gw2 is running";
             }
             try { gw2pro.Start(); }
-            catch (Exception e) { MessageBox.Show(e.Message); }
-            
-
+            catch (Exception e) { MessageBox.Show(e.Message); return; }
+            timestamp = DateTime.Now;
+            running = true;
         }
 
         private void onGW2Exit(object sender, System.EventArgs e)
         {
-            Thread.Sleep(2000);
-            fO.saveLocalDat(index);
+            fO.labelStatus.Text = "trying to save";
+
+            for(int i = 0; i <= initialTimeskip; i += 50)
+                Thread.Sleep(50);
+            for (int timer = 0; timer < timeoutOnClose;timer+=timeskip)
+            {
+                for (int i = 0; i <= timeskip; i += 50)
+                    Thread.Sleep(50);
+                
+                if (DateTime.Compare(File.GetLastWriteTime(Path.Combine(fO.path, "Local.dat")),timestamp)>0)
+                {
+                    fO.saveLocalDat(index);
+                }
+            }
+
+
+
             for (int i=0; i<startButtons.Length;i++)
                 startButtons[i].Enabled = true;
+            running = false;
         }
 
         // get ID from accessibleName, all accessible names used in this program are plain numbers
@@ -202,6 +227,21 @@ namespace GW2Helper
                 return id;
             else
                 return 0;
+        }
+        internal string getPath() { return ConfigGet("path"); }
+        internal void openArcWindow()
+        {
+            if (fA.Visible)
+                fA.Hide();
+            else
+            {
+                if (fA.IsDisposed)
+                    fA = new CheckArc();
+                fA.path = getPath();
+                fA.refreshDateLocal();
+                fA.refreshDateOnline();
+                fA.Show();
+            }
         }
         private void setLastlogin(int ID, DateTime date)
         {
@@ -284,9 +324,8 @@ namespace GW2Helper
             fO.setPath(ConfigGet("path"), 0);
             fO.setCmd(ConfigGet("cmd"));
             fO.setPath(ConfigGet("pathUnlocker"), 1);
-            fO.setCheckbox(10, ConfigGet("snap"));
-            fO.setCheckbox(11, ConfigGet("savePos"));
-            fO.setCheckbox(12, ConfigGet("autosave"));
+            fO.setCheckbox(10, ConfigGet("savePos"));
+            fO.setCheckbox(11, ConfigGet("autosave"));
             if (fO.checkBoxSavePos.Checked) {
                 string x = ConfigGet("WindowPosX");
                 string y = ConfigGet("WindowPosY");
@@ -378,8 +417,13 @@ namespace GW2Helper
         {
             int i = getID(sender);
             ConfigSetLastlogin(i);
-            for (int k = 0; k < startButtons.Length; k++)
-                startButtons[k].Enabled = true;
+            if (running && ConfigGet("autosave") == "True")
+            {
+                running = false;
+                for (int k = 0; k < startButtons.Length; k++)
+                    startButtons[k].Enabled = true;
+                fO.saveLocalDat(index);
+            }
         }
         
         private void button2_Click(object sender, EventArgs e)
@@ -389,7 +433,7 @@ namespace GW2Helper
 
         private void buttonInfo_Click(object sender, EventArgs e)
         {
-            fI.label1Version.Text = this.Version;
+            fI.label1Version.Text = Version;
             if (fI.Visible)
                 fI.Hide();
             else
@@ -413,41 +457,6 @@ namespace GW2Helper
         
         private void Form1_Move(object sender, EventArgs e)
         {
-            if (fO.checkBoxSnap.Checked) {
-                int finalPosX = Location.X;
-                int finalPosY = Location.Y;
-                bool changed = false;
-                Rectangle screen = getScreen();
-                if (Location.X < screen.Left + snapDist)
-                {
-                    changed = true;
-                    finalPosX = screen.Left;
-                } else
-                if (Location.X + Size.Width > screen.Right - snapDist)
-                {
-                    changed = true;
-                    finalPosX = screen.Right - Size.Width;
-                }
-
-                if (Location.Y < screen.Top + snapDist)
-                {
-                    changed = true;
-                    finalPosY = screen.Top;
-                } else
-                if (Location.Y + Size.Height > screen.Bottom - snapDist)
-                {
-                    changed = true;
-                    finalPosY = screen.Bottom - Size.Height;
-                }
-
-                if (changed && !screen.IsEmpty)
-                {
-                    this.Location = new Point(finalPosX, finalPosY);
-                    ReleaseCapture();
-                    //this.Location = new Point(finalPosX, finalPosY);
-                    SetCapture(Handle);
-                }
-            }
             //sets the location for the options window, moves them together
             Point p = this.PointToScreen(new Point(this.Width, this.ClientRectangle.Y));
             this.fO.Location = p;

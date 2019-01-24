@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Xml;
+using System.Net;
 
 /*
  * The MIT License (MIT)
@@ -49,6 +51,7 @@ namespace GW2Helper
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "Guild Wars 2");
         
+
         public options()
         {
             InitializeComponent();
@@ -58,7 +61,7 @@ namespace GW2Helper
             listNamebox = new TextBox[] { textBoxname0, textBoxname1, textBoxname2, textBoxname3, textBoxname4,
                                           textBoxname5, textBoxname6, textBoxname7, textBoxname8, textBoxname9};
             listChecboxes = new CheckBox[] {checkBox0, checkBox1, checkBox2, checkBox3, checkBox4,
-                                          checkBox5, checkBox6, checkBox7, checkBox8, checkBox9, checkBoxSnap, checkBoxSavePos, checkBoxAutosave};
+                                          checkBox5, checkBox6, checkBox7, checkBox8, checkBox9, checkBoxSavePos, checkBoxAutosave};
             listChecboxes2 = new CheckBox[] {checkBox10, checkBox11, checkBox12, checkBox13, checkBox14,
                                          checkBox15, checkBox16, checkBox17, checkBox18, checkBox19 };
             toolTip1.SetToolTip(textBoxCMD,"add additional command line arguments here like -maploadinfo, seperated by a space");
@@ -275,12 +278,7 @@ namespace GW2Helper
         {
             thatParentForm.configPut("pathUnlocker", textBoxShaderPath.Text);
         }
-
-        private void checkBoxSnap_CheckedChanged(object sender, EventArgs e)
-        {
-            thatParentForm.configPut("snap", checkBoxSnap.Checked.ToString());
-        }
-
+        
         private void checkBoxSavePos_CheckedChanged(object sender, EventArgs e)
         {
             thatParentForm.configPut("savePos", checkBoxSavePos.Checked.ToString());
@@ -296,5 +294,11 @@ namespace GW2Helper
             int i = getID_CB(sender);
             thatParentForm.configPut("acc." + i.ToString() + ".p2p", ((CheckBox)sender).Checked.ToString());
         }
+
+        private void arc_Click(object sender, EventArgs e)
+        {
+            thatParentForm.openArcWindow();
+        }
     }
 }
+

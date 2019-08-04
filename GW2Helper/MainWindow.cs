@@ -38,7 +38,7 @@ namespace GW2Helper
 {
     public partial class MainWindow : Form
     {
-        public const string Version = "2.4.0";
+        public const string Version = "2.4.1";
         private const int timeoutOnClose = 5000;//max time in ms; time till save after closing gw2
         private const int snapDist = 20;
         private const int timeskip = 500; //timeout between save tries
@@ -94,10 +94,11 @@ namespace GW2Helper
             toolTip1.SetToolTip(setButtons[0], "Sets the last login to now without starting GW2");
             //toolTip1.SetToolTip(buttonOptionen, "Beware: if not setup correctly, gw2 will remain white on startup.\n But it may also take a little longer as usual. (10s ony my system till char select)");
             // adding a reference of this form to the options form for accessing functions etc
+
             fO.thatParentForm = this;
-            fO.labelStatus.Text = "";
             fA.thatParentForm = this;
             warn.thatParentForm = this;
+            fO.labelStatus.Text = "";
 
             // register function to an asyc thread
             //bw_copy.DoWork += new DoWorkEventHandler(runCopyGw2localdat);
@@ -261,9 +262,9 @@ namespace GW2Helper
                 if (fA.IsDisposed)
                     fA = new CheckArc();
                 fA.path = getPath();
+                fA.Show();
                 fA.refreshDateLocal();
                 fA.refreshDateOnline();
-                fA.Show();
             }
         }
         private void setLastlogin(int ID, DateTime date)

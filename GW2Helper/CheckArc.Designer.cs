@@ -218,6 +218,7 @@
             this.Controls.Add(this.button1);
             this.Name = "CheckArc";
             this.Text = "CheckArc";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CheckArc_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

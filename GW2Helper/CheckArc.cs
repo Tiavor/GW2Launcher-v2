@@ -133,6 +133,13 @@ namespace GW2Helper
                 File.SetCreationTimeUtc(d3d9dll, getDate(htmlCode, "d3d9"));
             refreshDateLocal();
         }
+
+        private void CheckArc_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
+        }
+
         private void downloadedDateCompleteChangeFileDate2(object sender, DownloadStringCompletedEventArgs e)
         {
             String htmlCode = "";

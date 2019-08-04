@@ -14,11 +14,11 @@ namespace GW2Helper
         private string d3d9dll, d3d9old, gw2dat, d3d9btdll, d3d9btold;
         public string path;
         internal MainWindow thatParentForm { get; set; }
-
-
+        
         public CheckArc()
         {
             InitializeComponent();
+            button4.Enabled = false;
         }
         //cancel button
         private void button1_Click(object sender, EventArgs e)
@@ -103,31 +103,45 @@ namespace GW2Helper
 
             if (File.Exists(d3d9btdll))
                 File.Delete(d3d9btdll);
-            String htmlCode, htmlCode2;
 
             using (WebClient client = new WebClient())
             {
-                htmlCode = client.DownloadString("https://www.deltaconnected.com/arcdps/x64/");
-                htmlCode2 = client.DownloadString("https://www.deltaconnected.com/arcdps/x64/buildtemplates/");
-            }
-
-            using (var client = new WebClient())
-            {
+                client.Proxy = null;
                 client.DownloadFile("https://www.deltaconnected.com/arcdps/x64/d3d9.dll", d3d9dll);
                 client.DownloadFile("https://www.deltaconnected.com/arcdps/x64/buildtemplates/d3d9_arcdps_buildtemplates.dll", d3d9btdll);
             }
 
-            if (File.Exists(d3d9dll) && !String.IsNullOrEmpty(htmlCode))
+            using (WebClient client = new WebClient())
             {
-                File.SetCreationTimeUtc(d3d9dll, getDate(htmlCode, "d3d9"));
+                client.DownloadStringCompleted += new DownloadStringCompletedEventHandler(downloadedDateCompleteChangeFileDate1);
+                client.DownloadStringAsync(new Uri("https://www.deltaconnected.com/arcdps/x64/"));
             }
-            if (File.Exists(d3d9btdll) && !String.IsNullOrEmpty(htmlCode2))
+            using (WebClient client = new WebClient())
             {
-                File.SetCreationTimeUtc(d3d9btdll, getDate(htmlCode2, "d3d9_arcdps_buildtemplates.dll"));
+                client.DownloadStringCompleted += new DownloadStringCompletedEventHandler(downloadedDateCompleteChangeFileDate2);
+                client.DownloadString("https://www.deltaconnected.com/arcdps/x64/buildtemplates/");
             }
-
+            
             refreshDateLocal();
         }
+
+        private void downloadedDateCompleteChangeFileDate1(object sender, DownloadStringCompletedEventArgs e)
+        {
+            String htmlCode="";
+            htmlCode = e.Result;
+            if (htmlCode != "")
+                File.SetCreationTimeUtc(d3d9dll, getDate(htmlCode, "d3d9"));
+            refreshDateLocal();
+        }
+        private void downloadedDateCompleteChangeFileDate2(object sender, DownloadStringCompletedEventArgs e)
+        {
+            String htmlCode = "";
+            htmlCode = e.Result;
+            if (htmlCode != "")
+                File.SetCreationTimeUtc(d3d9btdll, getDate(htmlCode, "d3d9_arcdps_buildtemplates.dll"));
+            refreshDateLocal();
+        }
+
 
         internal void refreshDateLocal()
         {
@@ -165,15 +179,18 @@ namespace GW2Helper
         {
             String htmlCode, htmlCode2;
 
+            if (thatParentForm.dltext == "")
+                return;
+            button4.Enabled = true;
             using (WebClient client = new WebClient())
             {
+                client.Proxy = null;
                 htmlCode = client.DownloadString("https://www.deltaconnected.com/arcdps/x64/");
                 htmlCode2 = client.DownloadString("https://www.deltaconnected.com/arcdps/x64/buildtemplates/");
             }
 
             label_date_d3d9_online.Text = getDate(htmlCode,"d3d9").ToShortDateString();
             label_date_bt_online.Text = getDate(htmlCode2, "d3d9_arcdps_buildtemplates.dll").ToShortDateString();
-            
         }
         private DateTime getDate(String htmlCode, String searchValue)
         {

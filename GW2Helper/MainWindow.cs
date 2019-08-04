@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Net;
 
 /*
  * The MIT License (MIT)
@@ -37,7 +38,7 @@ namespace GW2Helper
 {
     public partial class MainWindow : Form
     {
-        public const string Version = "2.3.2";
+        public const string Version = "2.4.0";
         private const int timeoutOnClose = 5000;//max time in ms; time till save after closing gw2
         private const int snapDist = 20;
         private const int timeskip = 500; //timeout between save tries
@@ -57,9 +58,9 @@ namespace GW2Helper
         private string[] args = Environment.GetCommandLineArgs();
         private int lastStarted = -1;
         public int index = 0;
+        public string dltext="";
         private bool running = false;
         private DateTime timestamp;
-        private string hash;
         Process gw2pro = null;
 
         //constants and imports for moving the form without the top bar
@@ -97,6 +98,7 @@ namespace GW2Helper
             fO.labelStatus.Text = "";
             fA.thatParentForm = this;
             warn.thatParentForm = this;
+
             // register function to an asyc thread
             //bw_copy.DoWork += new DoWorkEventHandler(runCopyGw2localdat);
             //bw_copy.WorkerSupportsCancellation = true;
@@ -108,9 +110,30 @@ namespace GW2Helper
                         pid = args[i + 1];
                     }
             //configLoad(); //called via FormLoadEvent (Form1_Load)
+
+            //starting async download of web-text. this takes 20 seconds the first time it's done, that's why I start this here and not at the check-arc button.
+            using (WebClient client = new WebClient())
+            {
+                client.Proxy = null;
+                client.DownloadStringCompleted += new DownloadStringCompletedEventHandler(wc_DownloadStringCompleted);
+                client.DownloadStringAsync(new Uri("https://www.deltaconnected.com/arcdps/x64/"));
+            }
+        }
+        //gets called uppon completing the async string download
+        //the string download will take around 20 seconds the first time it gets called.
+        //unluckyly setting proxy to null doesn't help for whatever reason even though all online ressources say that I should do this.
+        private void wc_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
+            dltext = e.Result;
+            if (fA.Enabled)
+            {
+                fA.refreshDateOnline();
+            }
         }
 
-        // setup the process and start
+        /////////////////////////////////
+        // setup the process and start //
+        /////////////////////////////////
         private void startGW(int i)
         {
             //start gw if gw is not running and index is ok 
